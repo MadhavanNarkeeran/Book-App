@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block header %}
+<nav>
+    <a href="{{ url_for('books.index') }}">
+        <span>Home</span>
+    </a>
+    {% if current_user.is_authenticated %}
+    <div>
+        <a href="{{ url_for('users.account') }}">Account</a>
+        <a href="{{ url_for('users.logout') }}">Logout</a>
+    </div>
+    {% else %}
+    <div>
+        <a href="{{ url_for('users.login') }}">Login</a>
+        <a href="{{ url_for('users.register') }}">Register</a>
+    </div>
+    {% endif %}
+</nav>
+{% block content %}{% endblock %}{% endblock %}
