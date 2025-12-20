@@ -44,8 +44,11 @@ class BookClient(object):
         data = resp.json()
         
         total_items = data.get("totalItems", 0)
-        items_count = len(data.get("items", []))
-        print(f"DEBUG: Total items available: {total_items}, Items returned in this request: {items_count}")
+        
+        if (total_items == 0):
+            raise ValueError(
+                "No Results Found for this search"
+            )
 
         result = []
 
