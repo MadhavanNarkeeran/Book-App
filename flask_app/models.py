@@ -25,3 +25,10 @@ class Review(db.Document):
     date = StringField(required=True)
     book_id = StringField(required=True)
     book_title = StringField(required=True, min_length=1, max_length=100)
+
+
+class SavedBook(db.Document):
+    user = ReferenceField(User, required=True)
+    book_id = StringField(required=True)
+    book_title = StringField(required=True)
+    book_image = StringField(required=False)

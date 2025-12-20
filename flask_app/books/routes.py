@@ -4,9 +4,10 @@ from flask import Blueprint, render_template, url_for, redirect, request, flash
 from flask_login import current_user
 
 from .. import book_client
-from ..forms import BookReviewForm, SearchForm
-from ..models import User, Review
+from ..forms import BookReviewForm, SearchForm, SaveBookForm, RemoveSavedBookForm
+from ..models import User, Review, SavedBook
 from ..utils import current_time
+from flask_login import current_user
 
 books = Blueprint("books", __name__)
 """ ************ Helper for pictures uses username to get their profile picture************ """
@@ -47,6 +48,9 @@ def book_detail(book_id):
         return render_template("book_detail.html", error_msg=str(e))
 
     form = BookReviewForm()
+    save_form = SaveBookForm()
+    remove_form = RemoveSavedBookForm()
+    
     if form.validate_on_submit():
         if not current_user.is_authenticated:
             return redirect(url_for("users.login"))
@@ -62,6 +66,22 @@ def book_detail(book_id):
         review.save()
 
         return redirect(request.path)
+    
+    if save_form.save_book.data and save_form.validate():
+        if current_user.is_authenticated:
+            saved_book = SavedBook(
+                user=current_user._get_current_object(),
+                book_id=book_id,
+                book_title=result.title,
+                book_image=result.imageLink
+            )
+            saved_book.save()
+            return redirect(request.path)
+    
+    if remove_form.remove_book.data and remove_form.validate():
+        if current_user.is_authenticated:
+            SavedBook.objects(user=current_user._get_current_object(), book_id=book_id).delete()
+            return redirect(request.path)
 
     reviews = Review.objects(book_id=book_id)
     
@@ -75,7 +95,12 @@ def book_detail(book_id):
         }
         reviews_with_images.append(review_with_image)
 
-    return render_template("book_detail.html", form=form, book=result, reviews=reviews_with_images)
+    is_saved = False
+    if current_user.is_authenticated:
+        saved_book = SavedBook.objects(user=current_user._get_current_object(), book_id=book_id).first()
+        is_saved = saved_book is not None
+
+    return render_template("book_detail.html", form=form, book=result, reviews=reviews_with_images, is_saved=is_saved, save_form=save_form, remove_form=remove_form)
 
 
 @books.route("/user/<username>")

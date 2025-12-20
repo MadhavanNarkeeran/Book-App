@@ -78,3 +78,11 @@ class UpdateProfilePicForm(FlaskForm):
         ]
     )
     submit_picture = SubmitField("Update Picture")
+
+
+class SaveBookForm(FlaskForm):
+    save_book = SubmitField("Save Book")
+
+
+class RemoveSavedBookForm(FlaskForm):
+    remove_book = SubmitField("Remove Book")

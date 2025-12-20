@@ -5,6 +5,7 @@
     </a>
     {% if current_user.is_authenticated %}
     <div>
+        <a href="{{ url_for('users.saved_books') }}">Saved Books</a>
         <a href="{{ url_for('users.account') }}">Account</a>
         <a href="{{ url_for('users.logout') }}">Logout</a>
     </div>

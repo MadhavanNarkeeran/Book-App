@@ -21,6 +21,22 @@
     <li><b>Categories:</b> {{ book.categories | join(", ") }}</li>
   </ul>
 
+  {% if current_user.is_authenticated %}
+    <div>
+      {% if is_saved %}
+        <form method="POST" action="" style="display: inline;">
+          {{ remove_form.csrf_token }}
+          {{ remove_form.remove_book() }}
+        </form>
+      {% else %}
+        <form method="POST" action="" style="display: inline;">
+          {{ save_form.csrf_token }}
+          {{ save_form.save_book() }}
+        </form>
+      {% endif %}
+    </div>
+  {% endif %}
+
   <div>
     <h1> Reviews
       <small> {{ reviews | length }} reviews </small>

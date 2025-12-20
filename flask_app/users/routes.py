@@ -4,8 +4,8 @@ import base64
 from io import BytesIO
 from .. import bcrypt
 from werkzeug.utils import secure_filename
-from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfilePicForm
-from ..models import User
+from ..forms import RegistrationForm, LoginForm, UpdateUsernameForm, UpdateProfilePicForm, RemoveSavedBookForm
+from ..models import User, SavedBook
 
 users = Blueprint("users", __name__)
 
@@ -64,7 +64,6 @@ def account():
     
     if request.method == "POST":
         if update_username_form.submit_username.data and update_username_form.validate():
-            # TODO: handle update username form submit
             new_username = update_username_form.username.data
             current_user.modify(username=new_username)
             current_user.save()
@@ -73,7 +72,6 @@ def account():
             return redirect(url_for("users.account"))
 
         if update_profile_pic_form.submit_picture.data and update_profile_pic_form.validate():
-            # TODO: handle update profile pic form submit
             img = update_profile_pic_form.picture.data
             if current_user.profile_pic is None or current_user.profile_pic.get() is None:
                 current_user.profile_pic.put(img.stream, content_type=img.content_type)
@@ -85,3 +83,10 @@ def account():
             return redirect(url_for("users.account"))
 
     return render_template("account.html", update_username_form=update_username_form, update_profile_pic_form=update_profile_pic_form, image=image)
+
+
+@users.route("/saved-books")
+@login_required
+def saved_books():
+    saved_books_list = SavedBook.objects(user=current_user._get_current_object())
+    return render_template("saved_books.html", saved_books_list=saved_books_list)
