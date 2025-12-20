@@ -1,22 +1,22 @@
 {% extends "header.html" %} {% block content %}
 
 {% if error_msg %}
-  <b>
+  <div class="error-message">
     {{ error_msg }}
-  </b>
+  </div>
 {% endif %}
 
-<div>
-  {% for result in results %}
-  <a 
-    href="{{ url_for('books.book_detail', book_id=result.book_id) }}"
-  >
-    <img src="{{ result.imageLink }}" alt="missing" />
-    <h5> {{ result.title }}
-      <span> &middot; {{ result.publishedDate }} </span>
-    </h5>
-  </a>
-  {% endfor %}
+<div class="container">
+  <div class="book-results">
+    {% for result in results %}
+    <a class="book-card" href="{{ url_for('books.book_detail', book_id=result.book_id) }}">
+      <img src="{{ result.imageLink }}" alt="missing" />
+      <h5> {{ result.title }}
+        <span> &middot; {{ result.publishedDate }} </span>
+      </h5>
+    </a>
+    {% endfor %}
+  </div>
 </div>
 
 {% endblock %}

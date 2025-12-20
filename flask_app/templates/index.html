@@ -1,7 +1,7 @@
 {% extends "header.html" %} {% block content %}
-<div>
+<div class="container">
   <h2> Search a book </h2>
-  <form action="/" method="POST">
+  <form class="search-form" action="/" method="POST">
     {{ form.csrf_token }}
     {{ form.search_query(class="form-control", placeholder="book name") }}
 

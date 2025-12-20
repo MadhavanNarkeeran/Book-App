@@ -8,64 +8,67 @@
 
 {% if book %}
 
-<div>
-  <ul>
-    <div> {{ book.title }}
-      <p> &middot; {{ book.publishedDate }}</p>
+<div class="container">
+  <div class="book-detail">
+    <div class="book-header">
+      <h1>{{ book.title }}</h1>
+      <p class="book-date">&middot; {{ book.publishedDate }}</p>
     </div>
-    <img alt="alt text" src="{{ book.imageLink }}" />
-    <li><b>Authors:</b> {{ book.authors | join(", ") }}</li>
-    <li><b>Publisher:</b> {{ book.publisher }}</li>
-    <li><b>Description:</b> <div>{{ book.description | safe }}</div></li>
-    <li><b>Page Count:</b> {{ book.pageCount }}</li>
-    <li><b>Categories:</b> {{ book.categories | join(", ") }}</li>
-  </ul>
+    <img class="book-cover" alt="Book cover" src="{{ book.imageLink }}" />
+    <ul class="book-info">
+      <li><b>Authors:</b> {{ book.authors | join(", ") }}</li>
+      <li><b>Publisher:</b> {{ book.publisher }}</li>
+      <li><b>Description:</b> <div class="book-description">{{ book.description | safe }}</div></li>
+      <li><b>Page Count:</b> {{ book.pageCount }}</li>
+      <li><b>Categories:</b> {{ book.categories | join(", ") }}</li>
+    </ul>
 
-  {% if current_user.is_authenticated %}
-    <div>
-      {% if is_saved %}
-        <form method="POST" action="" style="display: inline;">
-          {{ remove_form.csrf_token }}
-          {{ remove_form.remove_book() }}
-        </form>
-      {% else %}
-        <form method="POST" action="" style="display: inline;">
-          {{ save_form.csrf_token }}
-          {{ save_form.save_book() }}
-        </form>
-      {% endif %}
-    </div>
-  {% endif %}
+    {% if current_user.is_authenticated %}
+      <div class="book-actions">
+        {% if is_saved %}
+          <form class="inline-form" method="POST" action="">
+            {{ remove_form.csrf_token }}
+            {{ remove_form.remove_book() }}
+          </form>
+        {% else %}
+          <form class="inline-form" method="POST" action="">
+            {{ save_form.csrf_token }}
+            {{ save_form.save_book() }}
+          </form>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
 
-  <div>
+  <div class="reviews-section">
     <h1> Reviews
       <small> {{ reviews | length }} reviews </small>
     </h1>
-    <ul>
+    <ul class="reviews-list">
       {% for review in reviews %}
-        <li>
+        <li class="review-item">
           {% if review.image %}
-          <img src="data:image/png;base64,{{review.image}}" alt="" />
+          <img class="review-avatar" src="data:image/png;base64,{{review.image}}" alt="" />
           {% endif %}
-          <div>
-            <span>{{ review.date }}</span>
-            <a href="{{ url_for('books.user_detail', username=review.commenter.username) }}">
+          <div class="review-content">
+            <span class="review-date">{{ review.date }}</span>
+            <a class="review-author" href="{{ url_for('books.user_detail', username=review.commenter.username) }}">
               @{{ review.commenter.username }}
             </a>
-            <p >{{ review.content }}</p>
+            <p class="review-text">{{ review.content }}</p>
           </div>
         </li>
       {% endfor %}
     </ul>
 
     {% if current_user.is_authenticated %}
-      <div>
-        <form method="POST" action="">
+      <div class="review-form-container">
+        <form class="review-form" method="POST" action="">
           {{ form.csrf_token }}
           <div>
             {{ form.text.label }} {{ form.text() }}
             {% if form.text.errors %}
-              <div role="alert">
+              <div class="error-message" role="alert">
                 {% for error in form.text.errors %}
                 <span>{{ error }}</span>
                 {% endfor %}
@@ -77,6 +80,5 @@
       </div>
     {% endif %}
   </div>
-  <div></div>
 </div>
 {% endif %} {% endblock content %}

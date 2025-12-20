@@ -1,23 +1,20 @@
 {% extends "header.html" %}
 {% block content %}
-<div>
+<div class="container">
     <h2>Log In</h2>
-</div>
-<div>
-    If you don't have an account, <a href="{{ url_for('users.register') }}">register here</a>.
-</div>
-<div>
+    <p class="form-link">If you don't have an account, <a href="{{ url_for('users.register') }}">register here</a>.</p>
+    
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
-                <div role="alert">
+                <div class="flash-message" role="alert">
                     <span>{{ message }}</span>
                 </div>
             {% endfor %}
         {% endif %}
     {% endwith %}
 
-    <form method="POST" action="">
+    <form class="auth-form" method="POST" action="">
         {{ form.csrf_token }}
         <div>
             {{ form.username.label }}
